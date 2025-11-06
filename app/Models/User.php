@@ -23,6 +23,21 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function projects() {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    public function tasks() {
+        return $this->hasMany(Task::class, 'author_id');
+    }
+
+    public function comments() {
+        return $this->hasMany(Comment::class, 'author_id');
+    }
+
+    public function assignedProjects() {
+        return $this->belongsToMany(Project::class, 'project_user')->withPivot('role');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
