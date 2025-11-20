@@ -11,20 +11,17 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        // Валідація
         $data = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Шукаємо користувача
         $user = User::where('email', $data['email'])->first();
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['message' => 'Невірний email або пароль'], 401);
+            return response()->json(['message' => 'Unknown email or password'], 401);
         }
 
-        // Створюємо токен
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
@@ -35,10 +32,9 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        // Анулюємо токен, який використовується для поточного запиту
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Вихід успішний']);
+        return response()->json(['message' => 'Logout successful']);
     }
 
 }

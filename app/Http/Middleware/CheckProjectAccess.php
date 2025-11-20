@@ -31,12 +31,10 @@ class CheckProjectAccess
             return response()->json(['message' => 'Project cant find'], 404);
         }
 
-        // Перевірка доступу: власник або учасник
         if ($project->owner_id !== $user->id && !$project->users->contains($user->id)) {
             return response()->json(['message' => 'Enter is closed'], 403);
         }
 
-        // Додаємо проект у запит для контролера (опційно)
         $request->merge(['project_model' => $project]);
 
         return $next($request);
